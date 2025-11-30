@@ -1,3 +1,12 @@
+/**
+ * Class: Maps
+ * Description: Component that displays the location of the event on Google Maps and a footer.
+ * Responsibilities:
+ *   - Render the Google Maps iframe.
+ *   - Display the footer with social media links and copyright info.
+ * Collaborators:
+ *   - None (Uses static assets and external links).
+ */
 import React from 'react';
 import logo from "../../../assets/images/B22-Slide-web-footer-v4.fw_.png";
 
@@ -20,7 +29,7 @@ const Maps: React.FC = () => {
                 }}
             >
                 <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-8 sm:py-12 md:px-12">
-                    {/* Redes sociales */}
+                    {/* Social Media */}
                     <div className="flex gap-6 mt-4 sm:mt-0">
                         <a
                             href="https://twitter.com/bienaldelchaco"
@@ -66,7 +75,7 @@ const Maps: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Derechos de autor */}
+                {/* Copyright */}
                 <div className="text-center py-4 bg-black bg-opacity-50">
                     <p className="text-sm opacity-80">
                         Copyright © {new Date().getFullYear()} - Todos los derechos reservados por Bienal Internacional

@@ -1,86 +1,88 @@
-// Importa los tipos de datos de Sequelize
+/**
+ * Class: Escultura
+ * Responsibilities:
+ * - Represent the Escultura entity in the database.
+ * - Define schema and relationships for sculpture data.
+ * Collaborators:
+ * - Sequelize
+ * - Escultor (Model)
+ * - Evento (Model)
+ */
 const { DataTypes } = require("sequelize");
-
-// Importa la instancia de conexión con la base de datos configurada
 const sequelize = require("../config/database");
 
-// Define el modelo de Escultura con sus atributos
 const Escultura = sequelize.define("Escultura", {
     id: {
-        type: DataTypes.INTEGER, // Tipo de dato entero para el ID
-        primaryKey: true, // Define este campo como clave primaria
-        autoIncrement: true, // El valor del ID se incrementará automáticamente
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
     nombre: {
-        type: DataTypes.STRING, // Tipo de dato cadena para el nombre de la escultura
-        allowNull: false, // No puede ser nulo
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     descripcion: {
-        type: DataTypes.TEXT, // Tipo de dato texto para la descripción
-        allowNull: true, // Puede ser nulo, ya que no es obligatorio
+        type: DataTypes.TEXT,
+        allowNull: true,
     },
     plano: {
-        type: DataTypes.STRING, // Tipo de dato cadena para la URL del plano inicial
-        allowNull: true, // Puede ser nulo
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     imagenes: {
-        type: DataTypes.ARRAY(DataTypes.STRING), // Tipo de dato arreglo de cadenas (URLs de imágenes)
-        allowNull: true, // Puede ser nulo, ya que no es obligatorio
-        defaultValue: [], // Valor por defecto: un arreglo vacío
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: true,
+        defaultValue: [],
     },
     imagenFinal: {
-        type: DataTypes.STRING, // Tipo de dato cadena para la URL de la imagen final
-        allowNull: true, // Puede ser nulo, ya que no es obligatorio
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     fechaCreacion: {
-        type: DataTypes.DATE, // Tipo de dato fecha para la fecha de creación
-        allowNull: true, // No puede ser nulo
+        type: DataTypes.DATE,
+        allowNull: true,
     },
     puntuacion: {
-        type: DataTypes.INTEGER, // Tipo de dato entero para la puntuación de la escultura
-        allowNull: false, // No puede ser nulo
-        defaultValue: 0, // Valor por defecto de la puntuación: 0
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
     },
-    userId: { // Relación con el usuario del escultor
-        type: DataTypes.INTEGER, // Tipo de dato entero para el ID del usuario
-        allowNull: false, // No puede ser nulo
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
         references: {
-            model: 'Escultors', // Especifica que este campo hace referencia al modelo 'Escultors'
-            key: 'userId', // Se refiere a la clave primaria 'userId' de la tabla Escultor
+            model: 'Escultors',
+            key: 'userId',
         },
-        onUpdate: 'CASCADE', // Si se actualiza el usuario, se actualiza el userId en Escultura
-        onDelete: 'SET NULL', // Si se elimina el usuario, el userId en Escultura se establece en NULL
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
     },
-    eventoId: { // Relación con la tabla de eventos
-        type: DataTypes.INTEGER, // Tipo de dato entero para el ID del evento
-        allowNull: true, // Puede ser nulo, ya que no es obligatorio
+    eventoId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
         references: {
-            model: 'Eventos', // Especifica que este campo hace referencia al modelo 'Eventos'
-            key: 'id', // Se refiere a la clave primaria 'id' de la tabla Evento
+            model: 'Eventos',
+            key: 'id',
         },
-        onUpdate: 'CASCADE', // Si se actualiza el evento, se actualiza el eventoId en Escultura
-        onDelete: 'SET NULL', // Si se elimina el evento, el eventoId en Escultura se establece en NULL
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
     },
 }, {
-    timestamps: true, // Se activan los timestamps (createdAt y updatedAt) automáticamente
-    createdAt: "createdAt", // Nombre del campo para la fecha de creación
-    updatedAt: "updatedAt", // Nombre del campo para la fecha de actualización
+    timestamps: true,
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
 });
 
-// Relación con otros modelos (Escultor y Evento)
 Escultura.associate = (models) => {
-    // La escultura pertenece a un escultor, usando el campo 'userId' como clave externa
     Escultura.belongsTo(models.Escultor, {
         foreignKey: 'userId',
-        as: 'escultor', // Alias para la relación
+        as: 'escultor',
     });
 
-    // La escultura pertenece a un evento, usando el campo 'eventoId' como clave externa
     Escultura.belongsTo(models.Evento, {
         foreignKey: 'eventoId',
-        as: 'evento', // Alias para la relación
+        as: 'evento',
     });
 };
 
-// Exporta el modelo Escultura para que pueda ser usado en otros archivos
 module.exports = Escultura;

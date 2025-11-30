@@ -1,3 +1,11 @@
+/**
+ * Class: UserLoggedOutMenu
+ * Description: Menu component for unauthenticated users.
+ * Responsibilities:
+ *   - Provide a link to the login page.
+ * Collaborators:
+ *   - None.
+ */
 import React from 'react';
 import { Link } from 'react-router-dom';
 

@@ -1,3 +1,15 @@
+/**
+ * Class: EventosHome
+ * Description: Component that displays a carousel of events on the home page.
+ * Responsibilities:
+ *   - Fetch and display the list of events.
+ *   - Manage the background image based on the current event slide.
+ *   - Handle loading and error states.
+ * Collaborators:
+ *   - EventService: Fetches the list of events.
+ *   - EventoCardHome: Displays individual event details in the carousel.
+ *   - Swiper: Third-party library for the carousel.
+ */
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -23,7 +35,6 @@ const EventosHome: React.FC = () => {
                 }
             } catch (error) {
                 setError('Error al cargar los eventos');
-                console.error('Error al cargar los eventos:', error);
             } finally {
                 setLoading(false);
             }
@@ -37,8 +48,8 @@ const EventosHome: React.FC = () => {
     };
 
     return (
-        // Contenedor principal
-        // Fondo de pantalla con imagen de fondo
+        // Main container
+        // Background with image
         <div
             className="relative w-full h-full overflow-hidden"
             style={{
@@ -47,10 +58,10 @@ const EventosHome: React.FC = () => {
                 backgroundPosition: 'center',
             }}
         >
-            {/* Fondo oscuro */}
+            {/* Dark overlay */}
             <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
-            {/* Contenido */}
+            {/* Content */}
             <div className="relative w-full h-full flex flex-col justify-center">
                 {loading ? (
                     <p className="text-center text-gray-300 text-2xl z-10 ">Cargando eventos...</p>

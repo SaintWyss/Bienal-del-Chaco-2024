@@ -1,87 +1,68 @@
-// Importamos los modelos necesarios desde el archivo de modelos
+/**
+ * Class: VotoService
+ * Responsibilities:
+ * - Handle business logic for Voto (Create, Update, Delete).
+ * - Validate QR codes for voting.
+ * - Update scores for Escultura and Escultor.
+ * Collaborators:
+ * - Voto (Model)
+ * - Escultura (Model)
+ * - Escultor (Model)
+ * - Qr (Model)
+ */
 const { Voto, Escultura, Escultor, Qr } = require("../models");
 
-// Función para validar un código QR
-const validateQr = async (qrCode, esculturaId) => {
-    // Buscamos un registro del código QR en la base de datos
-    const qrRecord = await Qr.findOne({ where: { uniqueCode: qrCode } });
+class VotoService {
+    async validateQr(qrCode, esculturaId) {
+        const qrRecord = await Qr.findOne({ where: { uniqueCode: qrCode } });
 
-    // Si no se encuentra el código QR o no está asociado a la escultura correcta, retornamos false
-    if (!qrRecord || qrRecord.esculturaId !== parseInt(esculturaId)) {
-        return false;
+        if (!qrRecord || qrRecord.esculturaId !== parseInt(esculturaId)) {
+            return false;
+        }
+
+        return Date.now() <= new Date(qrRecord.expiration);
     }
 
-    // Verificamos si el QR no ha expirado (comparamos la fecha actual con la fecha de expiración del QR)
-    return Date.now() <= new Date(qrRecord.expiration);
-};
+    async createOrUpdateVote(userId, esculturaId, puntuacion) {
+        const existingVote = await Voto.findOne({ where: { userId, esculturaId } });
 
-// Función para crear o actualizar un voto
-const createOrUpdateVote = async (userId, esculturaId, puntuacion) => {
-    // Buscamos si el usuario ya ha votado esta escultura
-    const existingVote = await Voto.findOne({ where: { userId, esculturaId } });
-
-    if (existingVote) {
-        // Si ya existe un voto, calculamos la diferencia con la nueva puntuación
-        const difference = puntuacion - existingVote.puntuacion;
-
-        // Actualizamos el voto con la nueva puntuación
-        await existingVote.update({ puntuacion });
-
-        // Actualizamos las puntuaciones de la escultura y el escultor
-        await updateScores(esculturaId, difference);
-
-        // Devolvemos el voto actualizado
-        return existingVote;
-    } else {
-        // Si no existe el voto, creamos uno nuevo
-        const voto = await Voto.create({ userId, esculturaId, puntuacion });
-
-        // Actualizamos las puntuaciones de la escultura y el escultor
-        await updateScores(esculturaId, puntuacion);
-
-        // Devolvemos el voto recién creado
-        return voto;
-    }
-};
-
-// Función para eliminar un voto
-const deleteVote = async (userId, esculturaId) => {
-    // Buscamos si el voto existe en la base de datos
-    const existingVote = await Voto.findOne({ where: { userId, esculturaId } });
-
-    // Si no se encuentra el voto, lanzamos un error
-    if (!existingVote) {
-        throw new Error("Voto no encontrado");
+        if (existingVote) {
+            const difference = puntuacion - existingVote.puntuacion;
+            await existingVote.update({ puntuacion });
+            await this.updateScores(esculturaId, difference);
+            return existingVote;
+        } else {
+            const voto = await Voto.create({ userId, esculturaId, puntuacion });
+            await this.updateScores(esculturaId, puntuacion);
+            return voto;
+        }
     }
 
-    // Restamos la puntuación de la escultura y el escultor al eliminar el voto
-    await updateScores(esculturaId, -existingVote.puntuacion);
+    async deleteVote(userId, esculturaId) {
+        const existingVote = await Voto.findOne({ where: { userId, esculturaId } });
 
-    // Eliminamos el voto de la base de datos
-    await existingVote.destroy();
-};
+        if (!existingVote) {
+            throw new Error("VOTO_NOT_FOUND");
+        }
 
-// Función para actualizar las puntuaciones de la escultura y el escultor
-const updateScores = async (esculturaId, puntuacionDifference) => {
-    // Buscamos la escultura en la base de datos
-    const escultura = await Escultura.findByPk(esculturaId);
-
-    // Si no encontramos la escultura, lanzamos un error
-    if (!escultura) {
-        throw new Error("Escultura no encontrada");
+        await this.updateScores(esculturaId, -existingVote.puntuacion);
+        await existingVote.destroy();
     }
 
-    // Actualizamos la puntuación de la escultura sumando o restando la diferencia de puntuación
-    await escultura.increment("puntuacion", { by: puntuacionDifference });
+    async updateScores(esculturaId, puntuacionDifference) {
+        const escultura = await Escultura.findByPk(esculturaId);
 
-    // Buscamos el escultor asociado a la escultura
-    const escultor = await Escultor.findByPk(escultura.escultorId);
+        if (!escultura) {
+            throw new Error("ESCULTURA_NOT_FOUND");
+        }
 
-    // Si existe el escultor, actualizamos su puntuación total
-    if (escultor) {
-        await escultor.increment("puntuacionTotal", { by: puntuacionDifference });
+        await escultura.increment("puntuacion", { by: puntuacionDifference });
+
+        const escultor = await Escultor.findByPk(escultura.userId); // Fixed: escultura.escultorId -> escultura.userId based on Escultura model
+        if (escultor) {
+            await escultor.increment("puntuacionTotal", { by: puntuacionDifference });
+        }
     }
-};
+}
 
-// Exportamos las funciones para que puedan ser utilizadas en otras partes del proyecto
-module.exports = { validateQr, createOrUpdateVote, deleteVote };
+module.exports = new VotoService();

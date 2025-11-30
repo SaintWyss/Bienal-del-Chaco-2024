@@ -1,11 +1,16 @@
+/**
+ * Class: VotacionQRCodeWrapper
+ * Description: Wrapper component for VotacionQRCode.
+ * Responsibilities:
+ *   - Render the VotacionQRCode component.
+ * Collaborators:
+ *   - VotacionQRCode: The actual QR code generation component.
+ */
 import React from 'react';
+import VotacionQRCode from './VotacionQRCode.tsx';
 
-import VotacionQRCode from './VotacionQRCode.tsx'; // Asegúrate de ajustar esta ruta si es necesario
-
-// Componente envoltorio que extrae `eventoId` de la URL y lo pasa a `VotacionQRCode`
 const VotacionQRCodeWrapper: React.FC = () => {
-
-    return <VotacionQRCode />; // Pasa `eventoId` como prop a `VotacionQRCode`
+    return <VotacionQRCode />;
 };
 
 export default VotacionQRCodeWrapper;

@@ -1,3 +1,14 @@
+/**
+ * Class: SculptureManagement
+ * Description: Component for managing sculptures in the admin panel. Allows creating, listing, and deleting sculptures.
+ * Responsibilities:
+ *   - Render the sculpture management interface.
+ *   - Handle navigation between Create, List, and Delete views.
+ * Collaborators:
+ *   - CreateSculpture: Component to create a new sculpture.
+ *   - SculptureListAdmin: Component to list and edit sculptures.
+ *   - DeleteSculpture: Component to delete sculptures.
+ */
 import React from 'react';
 import CreateSculpture from "./components/SculptureForm.tsx";
 import DeleteSculpture from "./components/SculptureDelete.tsx";
@@ -24,7 +35,7 @@ const SculptureManagement: React.FC = () => {
             <div className="max-w-md mx-auto relative overflow-hidden z-10 bg-white p-8 rounded-lg shadow-md before:w-24 before:h-24 before:absolute before:bg-purple-500 before:rounded-full before:-z-10 before:blur-2xl after:w-32 after:h-32 after:absolute after:bg-sky-400 after:rounded-full after:-z-10 after:blur-xl after:top-24 after:-right-12">
                 <h2 className="text-center text-4xl font-extrabold text-gray-700">Gestión de Esculturas</h2>
                 <div className="flex flex-col w-full gap-6">
-                    {/* Crear Escultura */}
+                    {/* Create Sculpture Button */}
                     <button
                         onClick={() => setSelectedAction('create')}
                         className={`relative font-semibold text-white cursor-pointer border-none rounded-md w-full py-4 text-xl z-10 overflow-hidden
@@ -35,7 +46,7 @@ const SculptureManagement: React.FC = () => {
                         </span>
                     </button>
 
-                    {/* Ver Lista de Esculturas */}
+                    {/* View Sculpture List Button */}
                     <button
                         onClick={() => setSelectedAction('list')}
                         className={`relative font-semibold text-white cursor-pointer border-none rounded-md w-full py-4 text-xl z-10 overflow-hidden
@@ -46,7 +57,7 @@ const SculptureManagement: React.FC = () => {
                         </span>
                     </button>
 
-                    {/* Eliminar Escultura */}
+                    {/* Delete Sculpture Button */}
                     <button
                         onClick={() => setSelectedAction('delete')}
                         className={`relative font-semibold text-white cursor-pointer border-none rounded-md w-full py-4 text-xl z-10 overflow-hidden

@@ -1,12 +1,24 @@
+/**
+ * Class: AdminPage
+ * Description: Main dashboard for administrators. Provides navigation to different management modules (Events, Sculptures, etc.) and public pages.
+ * Responsibilities:
+ *   - Render the sidebar navigation.
+ *   - Render the main content area using Swiper for transitions.
+ *   - Manage state for selected page and selected management tab.
+ * Collaborators:
+ *   - EventManagement, SculptureManagement, SculptorManagement, UserManagement: Management components.
+ *   - Home, Events, Sculptures, Sculptors, LoginPage: Public page previews.
+ *   - Swiper: Third-party library for content transitions.
+ */
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import 'swiper/css';
 import 'swiper/css/effect-creative';
 import { EffectCreative } from 'swiper/modules';
 
-import { FaCalendarAlt, FaCogs, FaUser, FaUsers, FaHome } from 'react-icons/fa'; // Librería de íconos
+import { FaCalendarAlt, FaCogs, FaUser, FaUsers, FaHome } from 'react-icons/fa'; // Icon library
 
-// Importar los componentes previos de gestión
+// Import management components
 import EventManagement from "./components/event/EventManagement";
 import SculptureManagement from "./components/sculpture/SculptureManagement";
 import SculptorManagement from "./components/sculptor/SculptorManagement";
@@ -18,10 +30,10 @@ import Sculptors from "../home/components/escultores/pages/Sculptors.tsx";
 import LoginPage from "../auth/pages/AuthPage.tsx";
 
 const AdminPage: React.FC = () => {
-    const [selectedPage, setSelectedPage] = useState<string>("home");  // Estado para las nuevas páginas
-    const [selectedTab, setSelectedTab] = useState<string>("event");  // Estado para los módulos de gestión
+    const [selectedPage, setSelectedPage] = useState<string>("home");  // State for new pages
+    const [selectedTab, setSelectedTab] = useState<string>("event");  // State for management modules
 
-    // Función para cambiar el contenido del databoard basado en la opción seleccionada
+    // Function to change databoard content based on selected option
     const renderPageContent = () => {
         switch (selectedPage) {
             case "home":
@@ -39,7 +51,7 @@ const AdminPage: React.FC = () => {
         }
     };
 
-    // Función para cambiar el contenido del databoard basado en la opción seleccionada para gestión
+    // Function to change databoard content based on selected management option
     const renderDataboardContent = () => {
         switch (selectedTab) {
             case "event":
@@ -57,12 +69,12 @@ const AdminPage: React.FC = () => {
 
     return (
         <div className="w-full h-screen flex bg-gray-100">
-            {/* Menú lateral */}
+            {/* Sidebar Menu */}
             <div className="w-1/4 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 rounded-lg p-4 text-gray-900 flex flex-col justify-between shadow-lg">
                 <div>
                     <h2 className="text-3xl font-extrabold mb-8">Admin Dashboard</h2>
                     <ul>
-                        {/* Enlaces para las nuevas páginas */}
+                        {/* Links for new pages */}
                         <li
                             onClick={() => setSelectedPage("home")}
                             className="cursor-pointer mb-6 flex items-center text-lg hover:text-gray-300 transition-all ease-in-out"
@@ -99,7 +111,7 @@ const AdminPage: React.FC = () => {
                             login
                         </li>
 
-                        {/* Enlaces para los módulos de gestión */}
+                        {/* Links for management modules */}
                         <li
                             onClick={() => setSelectedTab("event")}
                             className="cursor-pointer mb-6 flex items-center text-lg hover:text-gray-300 transition-all ease-in-out"
@@ -137,7 +149,7 @@ const AdminPage: React.FC = () => {
                 </div>
             </div>
 
-            {/* Databoard con efecto Swiper */}
+            {/* Databoard with Swiper effect */}
             <div className="w-3/4  bg-gray-100 p-6 flex flex-col">
                 <Swiper
                     grabCursor={true}
@@ -155,11 +167,11 @@ const AdminPage: React.FC = () => {
                     className="w-full h-full bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 rounded-lg shadow-2xl"
                 >
                     <SwiperSlide className="flex items-center justify-center bg-gradient-to-b from-blue-300 to-blue-500 rounded-lg shadow-lg">
-                        {/* Aquí se renderiza el contenido dependiendo de la página seleccionada */}
+                        {/* Content rendered depending on selected page */}
                         {renderPageContent()}
                     </SwiperSlide>
 
-                    {/* Contenido de los módulos de gestión */}
+                    {/* Content for management modules */}
                     <SwiperSlide className="flex items-center justify-center bg-gradient-to-r from-blue-100  to-purple-100 via-red-100 rounded-lg shadow-2xl overflow-y-scroll">
                         {renderDataboardContent()}
                     </SwiperSlide>

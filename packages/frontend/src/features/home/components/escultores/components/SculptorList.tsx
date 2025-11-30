@@ -1,15 +1,20 @@
+/**
+ * Class: SculptorList
+ * Description: Component that displays a list of sculptors in a card carousel format.
+ * Responsibilities:
+ *   - Fetch the list of sculptors.
+ *   - Display sculptor details (image, biography, score, social media).
+ *   - Handle loading and error states.
+ * Collaborators:
+ *   - escultorService: Fetches the list of sculptors.
+ *   - Swiper: Third-party library for the carousel.
+ */
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-cards";
-
-// Import required modules
 import { EffectCards } from "swiper/modules";
 import { fetchEscultores } from "../../../../../services/escultorService.ts";
-
-// Import iconos de redes sociales
 import { FaInstagram, FaFacebook, FaYoutube, FaLinkedin } from "react-icons/fa";
 
 interface Escultor {
@@ -23,7 +28,7 @@ interface Escultor {
     linkedin?: string;
 }
 
-const EscultorList: React.FC = () => {
+const SculptorList: React.FC = () => {
     const [escultores, setEscultores] = useState<Escultor[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -56,18 +61,18 @@ const EscultorList: React.FC = () => {
                 grabCursor={true}
                 modules={[EffectCards]}
                 className="rounded-lg shadow-xl"
-                spaceBetween={10}  // Menor espacio entre slides
-                slidesPerView={1}  // Por defecto, solo se muestra un slide
+                spaceBetween={10}
+                slidesPerView={1}
                 loop={true}
                 breakpoints={{
                     640: {
-                        slidesPerView: 1,  // En pantallas pequeñas, solo un slide
+                        slidesPerView: 1,
                     },
                     768: {
-                        slidesPerView: 2,  // En pantallas medianas, 2 slides
+                        slidesPerView: 2,
                     },
                     1024: {
-                        slidesPerView: 3,  // En pantallas grandes, 3 slides
+                        slidesPerView: 3,
                     },
                 }}
             >
@@ -75,7 +80,7 @@ const EscultorList: React.FC = () => {
                     escultores.map((escultor) => (
                         <SwiperSlide key={escultor.userId}>
                             <div className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105 duration-300">
-                                {/* Contenedor de imagen cuadrado */}
+                                {/* Image Container */}
                                 <div className="relative w-full h-64 md:h-72">
                                     <img
                                         src={escultor.imagen || "/default-image.jpg"}
@@ -142,4 +147,4 @@ const EscultorList: React.FC = () => {
     );
 };
 
-export default EscultorList;
+export default SculptorList;

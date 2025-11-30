@@ -1,5 +1,18 @@
+/**
+ * Class: RegisterForm
+ * Description: Component for user registration. Handles form validation and interaction with the AuthService.
+ * Responsibilities:
+ *   - Manage registration form state (inputs, loading, error).
+ *   - Validate form inputs.
+ *   - Call the registerUser service.
+ *   - Redirect to login upon success.
+ * Collaborators:
+ *   - AuthService: Performs the registration API call.
+ *   - useNavigate: React Router hook for navigation.
+ */
 import { useState } from 'react';
 import { registerUser } from "../../../services/AuthService.ts";
+import { useNavigate } from 'react-router-dom';
 
 interface RegisterFormProps {
     onSwitchToLogin: () => void;
@@ -12,12 +25,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
-        // Verificar que los campos no estén vacíos
+        // Verify that fields are not empty
         if (!nombre || !username || !email || !password) {
             setError('Todos los campos son obligatorios');
             setLoading(false);
@@ -26,13 +40,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
 
         try {
             const userData = { nombre, username, email, password };
-            const response = await registerUser(userData);
+            await registerUser(userData);
 
-            console.log('Usuario registrado:', response);
-            window.location.href = '/login'; // Redirigir a login si es necesario
+            // Redirect to login if necessary (or switch tab)
+            // For now, we can just switch to login view or navigate
+            // window.location.href = '/login'; // Deprecated
+            onSwitchToLogin(); // Switch back to login form in the swiper
 
         } catch (err) {
-            console.error('Error al registrar usuario:', err);
             setError('Hubo un error al registrar al usuario');
         } finally {
             setLoading(false);
@@ -101,7 +116,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
             <div className="text-center text-gray-300">
                 ¿Ya tienes una cuenta?
                 <button
-                    onClick={onSwitchToLogin} // Usamos la función pasada como prop para cambiar a Login
+                    onClick={onSwitchToLogin} // Use the function passed as prop to switch to Login
                     className="text-purple-200 hover:underline focus:outline-none ml-2"
                 >
                     Iniciar sesión

@@ -2,124 +2,75 @@
 
 Sigue estos pasos para configurar el proyecto en tu entorno local.
 
-## Requisitos Previos 
+## Requisitos Previos
 
 Para más detalles, consulta [Pre Condiciones](precondicion.md).
 
 ## Clonar el Repositorio
 
-1. **Ubicación:** Crea una carpeta en tu computadora en donde quieras guardar el proyecto o en el mismo escritorio.
+1. **Ubicación:** Crea una carpeta en tu computadora donde quieras guardar el proyecto.
 2. **Terminal:** Abre la terminal o consola de comandos.
-3. **Cambiar el Directorio:** Navega a la carpeta que creaste usando el comando: `cd RUTA_DE_ACCESO` (Reemplaza `RUTA_DE_ACCESO` con la ruta de la carpeta que creaste).
-4. **Inicializar Git:** Si no has inicializado Git en esa carpeta, puedes hacerlo con: `git init`
-5. **Clonar el Repositorio:** `git clone https://github.com/FRRe-DS/2024-11-TPI.git`
+3. **Clonar el Repositorio:**
+   ```bash
+   git clone https://github.com/FRRe-DS/2024-11-TPI.git
+   cd 2024-11-TPI
+   ```
 
 # Ejecutar el Proyecto
 
-## Instalación de Dependencias
+## 1. Instalación de Dependencias (Frontend)
 
-1. **Instalar Yarn
+Navega al directorio del frontend e instala las dependencias utilizando Yarn (recomendado) o NPM.
 
-    ```bash
-    npm install -g yarn
-    ```
+```bash
+cd packages/frontend
+yarn install
+```
 
-2. **Navegar al Directorio del Frontend:**
+_Nota: Esto instalará automáticamente React, Tailwind CSS, Axios y todas las librerías necesarias definidas en `package.json`._
 
-    ```bash
-    cd packages/frontend
-    ```
+## 2. Instalación de Dependencias (Backend)
 
-3. **Instalar Dependencias de React:**
+Abre una nueva terminal, navega al directorio del backend e instala las dependencias.
 
-    ```bash
-    npm install react@latest react-dom@latest
-    yarn add react@latest react-dom@latest
-   yarn add -D @types/react @types/react-dom
-   yarn add axios
+```bash
+cd packages/backend
+yarn install
+```
 
-    ```
+_Nota: Esto instalará Express, Sequelize, Nodemon y demás herramientas necesarias._
 
-4. **Instalar Tailwind CSS y Herramientas Relacionadas:**
+## 3. Configuración del Entorno
 
-    ```bash
-    yarn add -D tailwindcss postcss autoprefixer
-    npx tailwindcss init -p
-    yarn add -D daisyui@latest
-    ```
+Asegúrate de crear los archivos `.env` en ambas carpetas (`packages/frontend` y `packages/backend`) basándote en los archivos de ejemplo `.env.example` si existen, o configurando las variables necesarias (Base de datos, JWT Secret, etc.).
 
-5. **Agregar FontAwesome:**
+## 4. Ejecutar el Proyecto
 
-    ```bash
-    yarn add @fortawesome/fontawesome-free
-   
-    ```
+### Iniciar Backend
 
-6. **Instalar Dependencias Adicionales:**
+En la terminal del backend:
 
-   Revisa el archivo `package.json` para cualquier dependencia adicional que pueda ser necesaria y usa Yarn para instalarlas:
+```bash
+yarn dev
+```
 
-    ```bash
-    yarn install
-    ```
+### Iniciar Frontend
 
-7. **Navega al Directorio del Backend:**
+En la terminal del frontend:
 
-   Abre una nueva terminal en la raiz e ingresa:
+```bash
+yarn dev
+```
 
-    ```bash
-    cd packages/backend
-    ```
+La aplicación estará disponible generalmente en `http://localhost:5173` (Frontend) y `http://localhost:3000` (Backend).
 
-8. **Instalar Dependencias de backend:**
+## Construcción para Producción
 
-    ```bash
-   yarn add nodemon --dev
-   yarn add bcryptjs
-   yarn add mongoose
-   yarn add jsonwebtoken
-   
-   yarn install
-    ```
+Para generar la versión de producción del frontend:
 
-## Configuración del Entorno
+```bash
+cd packages/frontend
+yarn build
+```
 
-Estas configuraciones deberían estar realizadas automáticamente, pero es importante verificarlas:
-
-1. **Configurar Tailwind CSS:**
-
-   Asegúrate de que los archivos de configuración (`tailwind.config.js` y `postcss.config.js`) estén correctamente configurados para incluir tus rutas de archivos CSS y componentes.
-
-2. **Configurar Vite:**
-
-   Verifica que tu archivo `vite.config.js` esté configurado correctamente para trabajar con Tailwind CSS y cualquier otro plugin que necesites.
-
-3. **Configurar TypeScript:**
-
-   Si aún no lo has hecho, crea y configura un archivo `tsconfig.json` en el directorio raíz de tu proyecto con las opciones necesarias para TypeScript.
-
-## Ejecutar el Proyecto
-
-1. **Iniciar el Servidor de Desarrollo:**
-
-    ```bash
-    yarn dev
-    ```
-
-   Esto iniciará el servidor de desarrollo y podrás ver la aplicación en `http://localhost:3000` (o en el puerto que hayas configurado).
-
-2. **Construir el Proyecto para Producción:**
-
-    ```bash
-    yarn build
-    ```
-
-   Este comando construirá tu proyecto para producción, optimizando los archivos y generando la salida en el directorio `dist`.
-
-3. **Iniciar el Servidor de Producción (Opcional):**
-
-    ```bash
-    yarn preview
-    ```
-
-   Esto te permitirá ver una vista previa de la versión de producción de tu aplicación.
+Esto generará la carpeta `dist` con los archivos optimizados.

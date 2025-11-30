@@ -1,3 +1,15 @@
+/**
+ * Class: VotingPage
+ * Description: Page component for voting on a sculpture. Validates the QR code and allows the user to rate the sculpture.
+ * Responsibilities:
+ *   - Validate the QR code.
+ *   - Fetch sculpture details.
+ *   - Handle the voting process.
+ * Collaborators:
+ *   - SculptureService: Fetches sculpture details.
+ *   - VotingService: Registers the vote.
+ *   - QrService: Validates the QR code.
+ */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getEsculturaporId } from '../../services/SculptureService.ts';
@@ -27,10 +39,16 @@ const VotingPage: React.FC = () => {
     useEffect(() => {
         const fetchEscultura = async () => {
             try {
-                await ValidarQr(QrCode);
-                const data = await getEsculturaporId(esculturaId);
-                setEscultura(data.escultura);
-                setSelectedImage(data.escultura.imagenes[0]);
+                if (QrCode) {
+                    await ValidarQr(QrCode);
+                }
+                if (esculturaId) {
+                    const data = await getEsculturaporId(esculturaId);
+                    setEscultura(data.escultura);
+                    if (data.escultura.imagenes && data.escultura.imagenes.length > 0) {
+                        setSelectedImage(data.escultura.imagenes[0]);
+                    }
+                }
             } catch (err) {
                 setError('El QR es inválido o ha expirado.');
             } finally {
@@ -42,7 +60,7 @@ const VotingPage: React.FC = () => {
     }, [esculturaId, QrCode]);
 
     const manejarVoto = async (puntaje: number) => {
-        if (escultura) {
+        if (escultura && QrCode) {
             try {
                 await registerVote(escultura.id, puntaje, QrCode);
                 setPuntuacionSeleccionada(puntaje);
@@ -78,7 +96,7 @@ const VotingPage: React.FC = () => {
                         <strong>Autor:</strong> {escultura.escultor.usuario.nombre}
                     </p>
 
-                    {/* Plano de la escultura */}
+                    {/* Sculpture Plan */}
                     <div className="mb-6">
                         <h2 className="text-2xl font-bold text-center mb-4">Plano de la Escultura</h2>
                         <div className="flex justify-center">

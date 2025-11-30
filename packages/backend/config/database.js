@@ -1,42 +1,48 @@
-require('dotenv').config(); // Cargar variables de entorno
+/**
+ * Module: DatabaseConfig
+ * Responsibilities:
+ * - Configure and initialize Sequelize instance.
+ * - Test database connection.
+ * Collaborators:
+ * - Sequelize
+ * - dotenv
+ */
+require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
-// Crear instancia de Sequelize
 const sequelize = new Sequelize(
-    process.env.POSTGRES_DB, // Nombre de la base de datos
-    process.env.POSTGRES_USER, // Usuario de la base de datos
-    process.env.POSTGRES_PASSWORD, // Contraseña del usuario
+    process.env.POSTGRES_DB,
+    process.env.POSTGRES_USER,
+    process.env.POSTGRES_PASSWORD,
     {
-        host: process.env.DB_HOST, // Host de la base de datos
-        port: process.env.DB_PORT, // Puerto de la base de datos
-        dialect: 'postgres', // Dialecto de la base de datos
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        dialect: 'postgres',
         dialectOptions: {
             ssl: {
-                require: true, // SSL obligatorio para conexiones seguras
-                rejectUnauthorized: false, // Evitar errores con certificados autofirmados
+                require: true,
+                rejectUnauthorized: false,
             },
         },
-        logging: false, // Desactivar logs de Sequelize
+        logging: false,
         pool: {
-            max: 5, // Máximo de conexiones
-            min: 0, // Mínimo de conexiones
-            acquire: 30000, // Tiempo máximo para adquirir una conexión
-            idle: 10000, // Tiempo máximo de inactividad antes de liberar la conexión
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000,
         },
     }
 );
 
-// Probar conexión a la base de datos
 const testConnection = async () => {
     try {
-        await sequelize.authenticate(); // Intentar conectar a la base de datos
-        console.log('Conexión a la base de datos establecida con éxito.');
+        await sequelize.authenticate();
+        console.log('Database connection established successfully.');
     } catch (error) {
-        // Manejo básico de errores
-        console.error('Error en la conexión a la base de datos:', error.message);
+        console.error('Database connection error:', error.message);
     }
 };
 
-testConnection(); // Llamar a la función para probar la conexión
+testConnection();
 
 module.exports = sequelize;

@@ -1,3 +1,16 @@
+/**
+ * Class: VotacionQRCode
+ * Description: Component that generates and displays a QR code for voting on a sculptor's sculpture.
+ * Responsibilities:
+ *   - Fetch the logged-in sculptor's sculpture.
+ *   - Generate a QR code for the sculpture.
+ *   - Refresh the QR code periodically.
+ * Collaborators:
+ *   - QrService: Generates the QR code.
+ *   - AuthService: Gets the current user.
+ *   - SculptureService: Fetches sculptures for the user.
+ *   - ReactQR: Renders the QR code.
+ */
 import React, { useEffect, useState } from 'react';
 import { GenerarQr } from '../../../services/QrService.ts';
 import ReactQR from 'react-qr-code';
@@ -5,48 +18,42 @@ import { getUser } from "../../../services/AuthService.ts";
 import { getEsculturas } from "../../../services/SculptureService.ts";
 
 const VotacionQRCode: React.FC = () => {
-    const [qrCode, setQrCode] = useState<any>('');  // Estado para almacenar el código QR
+    const [qrCode, setQrCode] = useState<string>('');
     const [esculturaId, setEsculturaId] = useState<string | undefined>(undefined);
-    const [error, setError] = useState<string>(''); // Para manejar el error si no hay escultura
+    const [error, setError] = useState<string>('');
 
     useEffect(() => {
         const fetchQr = async () => {
             try {
                 const user = await getUser();
-                console.log('User', user.id);
 
-                // Obtener las esculturas para el usuario
+                // Fetch sculptures for the user
                 const esculturas = await getEsculturas(user.id);
-                console.log('Esculturas:', esculturas);
 
                 if (esculturas.esculturas.length === 0) {
-                    setError('No tiene una escultura');
+                    setError('No tiene una escultura asignada.');
                 } else {
-                    console.log('Esto es:', esculturas.esculturas[0].id);
-                    setEsculturaId(String(esculturas.esculturas[0].id)); // Establecer el ID de la escultura
+                    setEsculturaId(String(esculturas.esculturas[0].id));
                     const qrData = await GenerarQr(esculturas.esculturas[0].id);
-                    console.log('Info que mando', qrData);
-                    setQrCode(qrData); // Establecer el código QR
+                    setQrCode(qrData);
                 }
             } catch (err) {
-                console.log('Error al generar el QR. Inténtalo nuevamente.');
                 setError('Error al obtener la escultura o generar el QR.');
             }
         };
 
-        // Llamada inicial
+        // Initial call
         fetchQr();
 
-        // Configurar el intervalo para recargar el QR cada 1 minuto
-        const intervalId = setInterval(fetchQr, 60000); // 60000ms = 1 minuto
+        // Refresh QR every minute
+        const intervalId = setInterval(fetchQr, 60000);
 
-        // Limpiar el intervalo cuando el componente se desmonte
+        // Cleanup interval
         return () => {
             clearInterval(intervalId);
         };
-    }, []);  // Dependencia vacía: solo se ejecuta una vez cuando se monta el componente
+    }, []);
 
-    // Si hay un error o no hay escultura, mostrar mensaje de error
     if (error) {
         return (
             <div className="flex items-center justify-center h-screen bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 text-black">

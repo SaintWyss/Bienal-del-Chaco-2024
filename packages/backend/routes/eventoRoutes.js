@@ -1,4 +1,15 @@
-// Importación de las dependencias necesarias
+/**
+ * Module: EventoRoutes
+ * Responsibilities:
+ * - Define routes for Evento operations.
+ * - Map routes to EventoController methods.
+ * - Apply authentication and role middlewares.
+ * Collaborators:
+ * - Express Router
+ * - EventoController
+ * - AuthMiddleware
+ * - RoleMiddleware
+ */
 const express = require("express");
 const {
     crearEvento,
@@ -6,30 +17,16 @@ const {
     obtenerEventoPorId,
     actualizarEvento,
     eliminarEvento,
-} = require("../controllers/eventoController"); // Controladores para las operaciones de eventos
-const authMiddleware = require("../middlewares/authMiddleware"); // Middleware de autenticación
-const roleMiddleware = require("../middlewares/roleMiddleware"); // Middleware para la validación de roles
+} = require("../controllers/eventoController");
+const authMiddleware = require("../middlewares/authMiddleware");
+const roleMiddleware = require("../middlewares/roleMiddleware");
 
-const router = express.Router(); // Crea un router para manejar las rutas de eventos
+const router = express.Router();
 
-// Ruta para crear un evento
-// Solo accesible para administradores (mediante el middleware de autenticación y roles)
 router.post("/", authMiddleware, roleMiddleware("admin"), crearEvento);
-
-// Ruta para obtener todos los eventos
-// No requiere autenticación, pero puedes añadirla si lo necesitas en el futuro
 router.get("/", obtenerEventos);
-
-// Ruta para obtener un evento específico por ID
 router.get("/:id", obtenerEventoPorId);
-
-// Ruta para actualizar un evento
-// Solo accesible para administradores (mediante el middleware de autenticación y roles)
 router.put("/:id", authMiddleware, roleMiddleware("admin"), actualizarEvento);
-
-// Ruta para eliminar un evento
-// Solo accesible para administradores (mediante el middleware de autenticación y roles)
 router.delete("/:id", authMiddleware, roleMiddleware("admin"), eliminarEvento);
 
-// Exporta el router para que pueda ser utilizado en otras partes de la aplicación
 module.exports = router;

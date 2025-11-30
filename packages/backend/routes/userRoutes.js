@@ -1,35 +1,32 @@
-// Importación de dependencias y funciones
-const express = require("express"); // Framework para crear aplicaciones web en Node.js
-// Controladores que manejan las solicitudes relacionadas con usuarios
+/**
+ * Module: UserRoutes
+ * Responsibilities:
+ * - Define routes for User operations.
+ * - Map routes to UserController methods.
+ * - Apply authentication and role middlewares.
+ * Collaborators:
+ * - Express Router
+ * - UserController
+ * - AuthMiddleware
+ * - RoleMiddleware
+ */
+const express = require("express");
 const {
-    getUsers, // Función para obtener todos los usuarios
-    createUser, // Función para crear un nuevo usuario
-    getUserById, // Función para obtener un usuario por ID
-    updateUser, // Función para actualizar un usuario por ID
-    deleteUser, // Función para eliminar un usuario por ID
+    getUsers,
+    createUser,
+    getUserById,
+    updateUser,
+    deleteUser,
 } = require("../controllers/userController");
-// Middleware para autenticar el token JWT
 const authenticateToken = require("../middlewares/authMiddleware");
-// Middleware para verificar si el usuario tiene el rol adecuado
 const roleMiddleware = require("../middlewares/roleMiddleware");
 
-const router = express.Router(); // Crea un enrutador para gestionar las rutas de usuario
+const router = express.Router();
 
-// Definición de las rutas para gestionar usuarios
-// Ruta para obtener todos los usuarios (solo accesible para administradores)
-router.get("/", authenticateToken, roleMiddleware("admin"), getUsers); // Solo admins
+router.get("/", authenticateToken, roleMiddleware("admin"), getUsers);
+router.post("/", authenticateToken, roleMiddleware("admin"), createUser);
+router.get("/:id", authenticateToken, getUserById);
+router.put("/:id", authenticateToken, roleMiddleware("admin"), updateUser);
+router.delete("/:id", authenticateToken, roleMiddleware("admin"), deleteUser);
 
-// Ruta para crear un nuevo usuario (solo accesible para administradores)
-router.post("/", authenticateToken, roleMiddleware("admin"), createUser); // Solo admins
-
-// Ruta para obtener un usuario específico por ID (accesible para cualquier usuario autenticado)
-router.get("/:id", authenticateToken, getUserById); // Cualquier usuario autenticado
-
-// Ruta para actualizar un usuario por ID (solo accesible para administradores)
-router.put("/:id", authenticateToken, roleMiddleware("admin"), updateUser); // Solo admins
-
-// Ruta para eliminar un usuario por ID (solo accesible para administradores)
-router.delete("/:id", authenticateToken, roleMiddleware("admin"), deleteUser); // Solo admins
-
-// Exportación del enrutador para usarlo en la aplicación principal
 module.exports = router;

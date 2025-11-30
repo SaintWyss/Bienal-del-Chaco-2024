@@ -1,3 +1,15 @@
+/**
+ * Class: Login
+ * Description: Container component for the login process. Handles the interaction with the AuthService and navigation upon success.
+ * Responsibilities:
+ *   - Manage login state (loading, error).
+ *   - Call the login service.
+ *   - Redirect the user based on their role.
+ * Collaborators:
+ *   - AuthService: Performs the login API call.
+ *   - LoginForm: UI component for the login form.
+ *   - useNavigate: React Router hook for navigation.
+ */
 import React, { useState } from 'react';
 import { login } from '../../../services/AuthService.ts';
 import { useNavigate } from 'react-router-dom';
@@ -19,15 +31,13 @@ const Login: React.FC<LoginProps> = ({ onSwitchToRegister }) => {
         try {
             const user = await login(username, password);
             if (user) {
-                // Redirige al usuario según su rol
+                // Redirect user based on role
                 const destination = user.role === 'admin' ? '/AdminPage' : '/';
                 navigate(destination);
-                console.log('Redirigiendo a:', destination);
             } else {
                 setError('Error en las credenciales, inténtalo de nuevo.');
             }
         } catch (error) {
-            console.error('Error al iniciar sesión:', error);
             setError('Error al iniciar sesión. Por favor, revisa tus credenciales.');
         } finally {
             setLoading(false);

@@ -1,61 +1,62 @@
-// Importamos los tipos necesarios desde Sequelize y la configuración de la base de datos
+/**
+ * Class: Escultor
+ * Responsibilities:
+ * - Represent the Escultor entity in the database.
+ * - Define schema and relationships for sculptor data.
+ * Collaborators:
+ * - Sequelize
+ * - User (Model)
+ */
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Configuración de la base de datos
-const User = require('./User'); // Importamos el modelo de Usuario
+const sequelize = require('../config/database');
+const User = require('./User');
 
-// Definimos el modelo de 'Escultor' utilizando Sequelize
 const Escultor = sequelize.define('Escultor', {
-    // Definimos el campo 'userId' que referencia al modelo 'User'
     userId: {
-        type: DataTypes.INTEGER, // Tipo de dato: entero
-        primaryKey: true, // Esta columna es la clave primaria
-        allowNull: false, // No puede ser nulo
-        unique: true, // Este valor debe ser único
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        unique: true,
         references: {
-            model: User, // Establecemos que referencia al modelo 'User'
-            key: 'id', // La clave que se usa en el modelo 'User' es 'id'
+            model: User,
+            key: 'id',
         },
-        onUpdate: 'CASCADE', // Si el 'User' se actualiza, se actualiza automáticamente en 'Escultor'
-        onDelete: 'SET NULL', // Si el 'User' es eliminado, el 'userId' en 'Escultor' será nulo
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
     },
-    // Definimos el campo 'biografia' para almacenar información adicional sobre el escultor
     biografia: {
-        type: DataTypes.TEXT, // Tipo de dato: texto largo
-        allowNull: true, // Este campo es opcional
+        type: DataTypes.TEXT,
+        allowNull: true,
     },
-    // Definimos el campo 'imagen' para almacenar la URL de la imagen del escultor
     imagen: {
-        type: DataTypes.STRING, // Tipo de dato: cadena de texto
-        allowNull: true, // Este campo es opcional
-        defaultValue: 'https://default-avatar.com/imagen.png', // Valor por defecto en caso de no proporcionar una imagen
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: 'https://default-avatar.com/imagen.png',
     },
-    // Definimos el campo 'puntuacionTotal' que representa la puntuación del escultor
     puntuacionTotal: {
-        type: DataTypes.INTEGER, // Tipo de dato: entero
-        allowNull: false, // No puede ser nulo
-        defaultValue: 0, // Valor por defecto es 0
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
     },
-    // Definimos los campos de redes sociales, todos opcionales
     instagram: {
-        type: DataTypes.STRING, // Tipo de dato: cadena de texto
-        allowNull: true, // Este campo es opcional
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     facebook: {
-        type: DataTypes.STRING, // Tipo de dato: cadena de texto
-        allowNull: true, // Este campo es opcional
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     youtube: {
-        type: DataTypes.STRING, // Tipo de dato: cadena de texto
-        allowNull: true, // Este campo es opcional
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     linkedin: {
-        type: DataTypes.STRING, // Tipo de dato: cadena de texto
-        allowNull: true, // Este campo es opcional
+        type: DataTypes.STRING,
+        allowNull: true,
     },
 }, {
-    timestamps: true, // Habilitamos los campos 'createdAt' y 'updatedAt'
-    tableName: 'Escultors', // Especificamos el nombre de la tabla en la base de datos
+    timestamps: true,
+    tableName: 'Escultors',
 });
 
-// Exportamos el modelo para que sea utilizado en otras partes del proyecto
 module.exports = Escultor;

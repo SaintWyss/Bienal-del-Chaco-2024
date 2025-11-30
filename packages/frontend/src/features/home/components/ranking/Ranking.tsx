@@ -1,60 +1,69 @@
+/**
+ * Class: Ranking
+ * Description: Component that displays the ranking of sculptors based on their sculpture scores.
+ * Responsibilities:
+ *   - Fetch sculptors and sculptures data.
+ *   - Calculate total scores for each sculptor.
+ *   - Display the ranking in a table format.
+ * Collaborators:
+ *   - escultorService: Fetches sculptor data.
+ *   - SculptureService: Fetches sculpture data.
+ */
 import { useState, useEffect } from 'react';
 import { fetchEscultoresConNombre } from '../../../../services/escultorService.ts';
-import { getEsculturas } from "../../../../services/SculptureService.ts"; // Asegúrate de que la ruta sea correcta
+import { getEsculturas } from "../../../../services/SculptureService.ts";
 
 interface Escultor {
     userId: number;
     imagen?: string;
     usuario: { nombre: string };
     puntuacionTotal?: number;
+    [key: string]: any; // Allow dynamic access for "usuario.nombre" if needed, though better to access directly
 }
 
 interface Escultura {
-    userId: number;  // Asegúrate de que esto corresponde a la relación con el escultor
+    userId: number;
     puntuacion: number;
 }
 
 const Ranking = () => {
-    const [escultores, setEscultores] = useState<any[]>([]);
+    const [escultores, setEscultores] = useState<Escultor[]>([]);
 
     useEffect(() => {
         const loadEscultores = async () => {
             try {
-                // Obtener los escultores con su nombre y demás datos
+                // Fetch sculptors with their names and other data
                 const data = await fetchEscultoresConNombre();
-                console.log('Escultores: ', data);
 
-                // Obtener las esculturas
+                // Fetch sculptures
                 const response = await getEsculturas();
-                console.log('Esculturas:', response);
 
-                // Acceder a la propiedad 'esculturas' del objeto que se devuelve
-                const esculturas = response.esculturas; // Ahora es un arreglo de esculturas
+                // Access the 'esculturas' property of the returned object
+                const sculpturesList = response.esculturas;
 
-                // Verifica si 'esculturas' es un arreglo
-                if (!Array.isArray(esculturas)) {
-                    console.error("Las esculturas no son un arreglo", esculturas);
+                // Verify if 'sculpturesList' is an array
+                if (!Array.isArray(sculpturesList)) {
                     return;
                 }
 
-                // Asociar la puntuación de la escultura con el escultor
-                const escultoresConPuntuacion = data.map((escultor: Escultor) => {
-                    // Buscar la escultura asociada al escultor usando el ID del escultor
-                    const escultura = esculturas.find((escultura: Escultura) => escultura.userId === escultor.userId);
+                // Associate sculpture score with the sculptor
+                const sculptorsWithScore = data.map((escultor: Escultor) => {
+                    // Find the sculpture associated with the sculptor using the sculptor's ID
+                    const sculpture = sculpturesList.find((s: Escultura) => s.userId === escultor.userId);
                     return {
-                        ...escultor, // Conserva los datos del escultor
-                        puntuacionTotal: escultura ? escultura.puntuacion : 0, // Si hay escultura, toma su puntuación
+                        ...escultor,
+                        puntuacionTotal: sculpture ? sculpture.puntuacion : 0,
                     };
                 });
 
-                // Ordenar los escultores por puntuación
-                const sortedEscultores = escultoresConPuntuacion.sort((a, b) => b.puntuacionTotal - a.puntuacionTotal);
+                // Sort sculptors by score
+                const sortedSculptors = sculptorsWithScore.sort((a: Escultor, b: Escultor) => (b.puntuacionTotal || 0) - (a.puntuacionTotal || 0));
 
-                // Actualizar el estado con los escultores ordenados
-                setEscultores(sortedEscultores);
+                // Update state with sorted sculptors
+                setEscultores(sortedSculptors);
 
             } catch (error) {
-                console.error("Error al cargar los escultores:", error);
+                // Handle error silently or with a UI notification
             }
         };
 
@@ -62,9 +71,9 @@ const Ranking = () => {
     }, []);
 
     const getMedalIcon = (index: number) => {
-        if (index === 0) return "🥇"; // Oro
-        if (index === 1) return "🥈"; // Plata
-        if (index === 2) return "🥉"; // Bronce
+        if (index === 0) return "🥇"; // Gold
+        if (index === 1) return "🥈"; // Silver
+        if (index === 2) return "🥉"; // Bronze
         return "";
     };
 
@@ -72,7 +81,7 @@ const Ranking = () => {
         <div className="absolute inset-0 overflow-hidden bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 min-h-screen flex flex-col items-center py-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-6">Ranking de Escultores</h1>
             <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
-                {/* Contenedor para el desplazamiento horizontal */}
+                {/* Container for horizontal scrolling */}
                 <div className="overflow-x-auto">
                     <table className="table-auto w-full text-left">
                         <thead className="bg-gray-800 text-white">
@@ -99,7 +108,7 @@ const Ranking = () => {
                                         alt="Escultor"
                                         className="w-10 h-10 rounded-full mr-4"
                                     />
-                                    <span className="text-gray-800 font-medium">{escultor["usuario.nombre"]}</span>
+                                    <span className="text-gray-800 font-medium">{escultor.usuario?.nombre || "Desconocido"}</span>
                                 </td>
                                 <td className="px-4 py-3 text-center text-lg font-bold text-gray-700">
                                     {escultor.puntuacionTotal}

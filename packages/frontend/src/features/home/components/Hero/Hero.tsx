@@ -1,3 +1,13 @@
+/**
+ * Class: Hero
+ * Description: Hero section component for the home page. Displays a background video, logo, title, and a scroll indicator.
+ * Responsibilities:
+ *   - Render the hero section with video background.
+ *   - Display the main title and description.
+ *   - Provide a visual cue for scrolling.
+ * Collaborators:
+ *   - Framer Motion: Used for animations (text gradient, bounce).
+ */
 import { motion } from 'framer-motion';
 import React from "react";
 import logo2 from "../../assets/images/b24-slide-principal-nuevo-logo-gobierno.png";

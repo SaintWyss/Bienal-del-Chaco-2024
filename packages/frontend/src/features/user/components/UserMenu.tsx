@@ -1,30 +1,45 @@
-import React, { useState, useEffect } from 'react'; // Asegúrate de importar useEffect aquí
-import { getRole, getUser } from '../../../services/AuthService.ts'; // Importar las funciones asincrónicas
+/**
+ * Class: UserMenu
+ * Description: Component that determines which user menu to display based on authentication status.
+ * Responsibilities:
+ *   - Fetch user role and username.
+ *   - Render UserLoggedInMenu or UserLoggedOutMenu.
+ * Collaborators:
+ *   - AuthService: Fetches user role and details.
+ *   - UserLoggedInMenu: Menu for authenticated users.
+ *   - UserLoggedOutMenu: Menu for unauthenticated users.
+ */
+import React, { useState, useEffect } from 'react';
+import { getRole, getUser } from '../../../services/AuthService.ts';
 import UserLoggedInMenu from './UserLoggedInMenu.tsx';
 import UserLoggedOutMenu from './UserLoggedOutMenu.tsx';
 
 const UserMenu: React.FC = () => {
-    // Define los estados para el rol y el nombre de usuario
     const [role, setRole] = useState<string | null>(null);
     const [username, setUsername] = useState<string | null>(null);
 
     useEffect(() => {
-        // Llamar a las funciones asincrónicas cuando el componente se monta
         const fetchUserData = async () => {
-            const userRole = await getRole(); // Obtener el rol del usuario
-            const user = await getUser(); // Obtener el nombre de usuario
+            try {
+                const userRole = await getRole();
+                const user = await getUser();
 
-            setRole(userRole);  // Establecer el rol
-            setUsername(user.username); // Establecer el nombre de usuario
+                setRole(userRole);
+                setUsername(user?.username || null);
+            } catch (error) {
+                // Handle error silently, user is likely not logged in
+                setRole(null);
+                setUsername(null);
+            }
         };
 
-        fetchUserData();  // Llamar a la función para obtener datos
-    }, []);  // Solo se ejecuta una vez cuando el componente se monta
+        fetchUserData();
+    }, []);
 
     if (!role) {
-        return <UserLoggedOutMenu />; // Si no hay rol, renderiza el menú de no logueado
+        return <UserLoggedOutMenu />;
     }
-    return <UserLoggedInMenu role={role} username={username}/>; // Si hay rol, renderiza el menú de logueado
+    return <UserLoggedInMenu role={role} username={username} />;
 };
 
 export default UserMenu;

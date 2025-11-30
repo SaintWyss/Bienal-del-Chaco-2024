@@ -1,68 +1,55 @@
-// Requerimos los módulos necesarios
-const { generateQRCode } = require("../utils/qrcode"); // Función para generar el QR visual
-const { Escultura, Qr } = require("../models"); // Modelos de Escultura y Qr desde la base de datos
-const crypto = require("crypto"); // Módulo para generar un código único aleatorio
+/**
+ * Class: QrService
+ * Responsibilities:
+ * - Handle business logic for QR codes (Generate, Validate).
+ * - Interact with Qr and Escultura models.
+ * Collaborators:
+ * - Qr (Model)
+ * - Escultura (Model)
+ * - crypto (Library)
+ */
+const { Escultura, Qr } = require("../models");
+const crypto = require("crypto");
 
-// Función para generar un código QR para una escultura
-const generateEsculturaQRCode = async (esculturaId) => {
-    try {
-        // Buscamos la escultura en la base de datos por su ID
+class QrService {
+    async generateEsculturaQRCode(esculturaId) {
         const escultura = await Escultura.findByPk(esculturaId);
 
-        // Si no se encuentra la escultura, lanzamos un error
         if (!escultura) {
-            throw new Error("Escultura no encontrada");
+            throw new Error("ESCULTURA_NOT_FOUND");
         }
 
-        // Generamos un código único para el QR utilizando crypto
-        const expiration = Date.now() + 60 * 1000; // La expiración del código QR es en 10 minutos
-        const uniqueCode = crypto.randomBytes(16).toString("hex"); // Generamos un código único en formato hexadecimal
+        const expiration = Date.now() + 60 * 1000; // 1 minute expiration? Seems short but keeping logic.
+        const uniqueCode = crypto.randomBytes(16).toString("hex");
 
-        // Creamos un nuevo registro del QR en la base de datos
-        const qrRecord = await Qr.create({
-            esculturaId, // Asociamos el QR con la escultura
-            uniqueCode, // Asignamos el código único generado
-            expiration: new Date(expiration), // Establecemos la fecha de expiración en formato Date
+        await Qr.create({
+            esculturaId,
+            uniqueCode,
+            expiration: new Date(expiration),
         });
 
-        // Generamos el código QR visual, que es una imagen
-        //const qrCode = await generateQRCode(JSON.stringify({ uniqueCode }));
-        //Retorno solo el codigo unico para generar url
-        const qrCode = uniqueCode;
-
-        // Retornamos tanto el QR visual como el registro guardado en la base de datos
-        return { qrCode };
-    } catch (error) {
-        console.error('Error en la generación del QR:', error);
-        throw error; // Propaga el error si es necesario
-    }
-};
-
-
-// Función para validar un QR escaneado
-const validateQRCode = async (qrData) => {
-    // Parseamos los datos del QR escaneado
-    const { esculturaId, uniqueCode, expiration } = JSON.parse(qrData);
-
-    // Verificamos si el código QR ha expirado
-    if (Date.now() > expiration) {
-        throw new Error("El código QR ha expirado");
+        return { qrCode: uniqueCode };
     }
 
-    // Verificamos si la escultura asociada al QR existe en la base de datos
-    const escultura = await Escultura.findByPk(esculturaId);
+    async validateQRCode(uniqueCode) {
+        const qrRecord = await Qr.findOne({ where: { uniqueCode } });
 
-    // Si no se encuentra la escultura, lanzamos un error con un código de estado 404
-    if (!escultura) {
-        throw { status: 404, message: "Escultura no encontrada" };
+        if (!qrRecord) {
+            throw new Error("QR_NOT_FOUND");
+        }
+
+        if (Date.now() > new Date(qrRecord.expiration).getTime()) {
+            throw new Error("QR_EXPIRED");
+        }
+
+        const escultura = await Escultura.findByPk(qrRecord.esculturaId);
+
+        if (!escultura) {
+            throw new Error("ESCULTURA_NOT_FOUND");
+        }
+
+        return escultura;
     }
+}
 
-    // Si todo está bien, retornamos la escultura
-    return escultura;
-};
-
-// Exportamos las funciones para que puedan ser utilizadas en otros archivos
-module.exports = {
-    generateEsculturaQRCode,
-    validateQRCode,
-};
+module.exports = new QrService();

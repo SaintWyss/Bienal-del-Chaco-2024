@@ -1,3 +1,13 @@
+/**
+ * Class: EsculturasIndex
+ * Description: Entry point for the sculptures section in the home page. Adapts to mobile or desktop view.
+ * Responsibilities:
+ *   - Detect screen size to toggle between mobile and desktop views.
+ *   - Render the appropriate sculpture list component for the home page.
+ * Collaborators:
+ *   - SculptureListHome: Desktop view for the home sculpture list.
+ *   - SculptureListHomeMobile: Mobile view for the home sculpture list.
+ */
 import React, { useState, useEffect } from "react";
 import SculptureListHomeMobile from "../components/SculptureListHomeMobile.tsx";
 import SculptureListHome from "../components/SculptureListHome.tsx";
@@ -9,29 +19,29 @@ interface IndexProps {
     eventoId?: number;
 }
 
-const Index: React.FC<IndexProps> = ({ eventoId }) => {
-    // Estado para verificar si estamos en mobile
+const EsculturasIndex: React.FC<IndexProps> = ({ eventoId }) => {
+    // State to check if we are on mobile
     const [isMobile, setIsMobile] = useState<boolean>(false);
 
-    // Actualiza el estado de isMobile en función del tamaño de la ventana
+    // Updates isMobile state based on window size
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth <= 768); // Cambiar a 768px para tamaños md // Cambiar a 768px para tamaños md
+            setIsMobile(window.innerWidth <= 768); // Breakpoint at 768px
         };
 
-        // Inicializar el estado correctamente en el primer renderizado
+        // Initialize state on first render
         handleResize();
 
-        // Agregar un event listener para el redimensionamiento de la ventana
+        // Add event listener for window resize
         window.addEventListener("resize", handleResize);
 
-        // Limpiar el event listener cuando el componente se desmonte
+        // Cleanup event listener on unmount
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, []); // El hook solo se ejecuta una vez al montar el componente
+    }, []);
 
-    // Renderiza el componente adecuado dependiendo del tamaño de la ventana
+    // Render appropriate component based on window size
     return isMobile ? (
         <SculptureListHomeMobile eventoId={eventoId} />
     ) : (
@@ -39,4 +49,4 @@ const Index: React.FC<IndexProps> = ({ eventoId }) => {
     );
 };
 
-export default Index;
+export default EsculturasIndex;
