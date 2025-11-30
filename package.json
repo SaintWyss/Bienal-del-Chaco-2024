@@ -1,0 +1,22 @@
+{
+  "name": "bienal-del-chaco",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/backend",
+    "packages/frontend",
+    "packages/shared"
+  ],
+  "scripts": {
+    "build": "yarn workspace backend build && yarn workspace frontend build",
+    "start": "yarn workspace backend start && yarn workspace frontend serve",
+    "dev:frontend": "yarn workspace frontend run dev",
+    "dev:backend": "yarn workspace backend run dev",
+    "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\""
+  },
+  "dependencies": {
+    "concurrently": "^9.1.0",
+    "swiper": "^11.1.15",
+    "yarn": "^1.22.22"
+  }
+}

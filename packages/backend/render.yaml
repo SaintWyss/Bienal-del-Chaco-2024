@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: bienal-backend
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: "cd packages/backend && yarn install && yarn build"
+    startCommand: "cd packages/backend && yarn start"
+    runtime: node
+    envVars:
+      - key: POSTGRES_USER
+        value: bienal_user
+      - key: POSTGRES_PASSWORD
+        value: G3m6TtmBlOPPiTYJkIFA8fhpDR9Hk719
+      - key: POSTGRES_DB
+        value: bienal_db_1fuo
+      - key: DB_HOST
+        value: dpg-ct13fmpu0jms73cc0bng-a.oregon-postgres.render.com
+      - key: DB_PORT
+        value: 5432
+      - key: PORT
+        value: 3000
+      - key: JWT_SECRET
+        value: tu_secreto_super_seguro
+      - key: JWT_EXPIRES_IN
+        value: 1h

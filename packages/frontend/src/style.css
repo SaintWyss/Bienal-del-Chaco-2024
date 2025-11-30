@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.sculpture-container {
+    max-height: 600px;
+    max-width: 220px;/* O el valor que necesites */
+    overflow-y: auto;
+}
+
+/*ESTRELLITAS*/
+#form {
+    width: 250px;
+    margin: 0 auto;
+    height: 50px;
+}
+
+#form p {
+    text-align: center;
+}
+
+#form label {
+    font-size: 20px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+label {
+    color: grey;
+}
+
+.clasificacion {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+}
+
+label:hover,
+label:hover ~ label {
+    color: orange;
+}
+
+input[type="radio"]:checked ~ label {
+    color: orange;
+}
+
+/* Esto es para los botones de colores */
+button:hover .blob:nth-child(1) { background: #0061ff; }
+button:hover .blob:nth-child(2) { background: #ff1b6b; }
+button:hover .blob:nth-child(3) { background: #bf0fff; }
+button:hover .blob:nth-child(4) { background: #ff930f; }
+button:hover .blob { transform: scale(1.3); }
+html {
+    scroll-behavior: smooth;
+}
