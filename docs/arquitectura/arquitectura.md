@@ -77,8 +77,13 @@ El flujo de datos es el siguiente:
 
 ### Patrones de Diseño:
 
-- **MVC (Modelo-Vista-Controlador):** Para separar la lógica de negocio, la interfaz de usuario y los datos, facilitando la mantenibilidad.
-- **Service Layer Pattern:** Se utiliza una capa de servicios en el frontend para desacoplar la lógica de la UI de la lógica de comunicación con la API.
+- **MVC (Modelo-Vista-Controlador):** Utilizado principalmente en el Backend para separar la lógica de negocio (Controladores), la definición de datos (Modelos) y las rutas de acceso (Vistas/Rutas), facilitando la mantenibilidad y escalabilidad.
+- **Service Layer Pattern:** Implementado en el Frontend (`src/services/`) para desacoplar la lógica de la UI de la lógica de comunicación con la API. Los componentes solo llaman a métodos del servicio sin conocer los detalles de la implementación HTTP.
+- **Container/Presentational Pattern:** Aplicado en componentes complejos (como `SculpturesPage` o `AdminPage`) donde se separa la lógica de obtención de datos y estado (Container) de la renderización visual (Presentational).
+- **Singleton Pattern:** Utilizado en la configuración de `axios` (`axiosConfig.ts`) para asegurar que exista una única instancia del cliente HTTP con los interceptores y configuraciones base compartidas en toda la aplicación.
+- **Strategy Pattern:** Empleado implícitamente en la gestión de autenticación y validaciones, permitiendo intercambiar estrategias de validación o manejo de errores sin modificar el código cliente.
+- **Decorator Pattern:** Implementado a través de Higher-Order Components (HOC) como `ProtectedRoute`, que "decora" o envuelve componentes para agregarles funcionalidad de verificación de autenticación antes de renderizarlos.
+- **Observer Pattern:** Base del funcionamiento de React (Hooks `useEffect`, `useState`), donde los componentes "observan" cambios en el estado o props y reaccionan actualizando la interfaz automáticamente.
 - **CRC (Clase-Responsabilidad-Colaborador):** Se utiliza documentación tipo CRC en los encabezados de los componentes principales para definir claramente sus responsabilidades y colaboradores.
 
 ### Buenas Prácticas (Clean Code):
