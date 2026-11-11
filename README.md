@@ -1,4 +1,7 @@
-# Bienal del Chaco 2024
+<h1 align="center">Bienal-del-Chaco-2024</h1>
+
+<p align="center"><strong>Proyecto académico para explorar eventos y esculturas.</strong><br/>React · TypeScript · Express</p>
+
 
 Bienvenido al proyecto Bienal del Chaco 2024. Aquí encontrarás toda la información necesaria para trabajar con este proyecto.
 
@@ -10,7 +13,7 @@ https://bienal-del-chaco2024-frontend-9xyl.vercel.app/
 
 El proyecto ha pasado por un proceso de refactorización para mejorar la calidad del código y la mantenibilidad:
 
-- **Clean Code:** Se han aplicado principios de código limpio, eliminando tipos `any` y mejorando la nomenclatura.
+- **Clean Code:** Se han aplicado principios de código limpio, mejorando el tipado y la nomenclatura.
 - **Documentación CRC:** Los componentes principales ahora cuentan con documentación CRC (Clase-Responsabilidad-Colaborador) en sus encabezados.
 - **Estandarización:** Comentarios técnicos en inglés y textos de interfaz en español.
 - **Optimización:** Mejoras en la estructura de carpetas `features/` y optimización de componentes clave (`Home`, `Admin`, `Auth`).
