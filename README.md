@@ -3,9 +3,19 @@
 <p align="center"><strong>Proyecto académico para explorar eventos y esculturas.</strong><br/>React · TypeScript · Express</p>
 
 
-Proyecto académico full stack inspirado en la Bienal del Chaco 2024. El repositorio reúne la aplicación web, el backend y código compartido para explorar el catálogo y las funciones del proyecto.
+Proyecto académico full stack inspirado en la Bienal del Chaco 2024. El repositorio reúne la aplicación web y el backend para explorar el catálogo y las funciones del proyecto.
 
 **Estado:** proyecto académico histórico. La disponibilidad del despliegue y de sus servicios puede variar.
+
+## Tecnologías y arquitectura
+
+El repositorio organiza la aplicación en workspaces de Yarn:
+
+- **Frontend:** React, TypeScript, Vite y Tailwind CSS; usa React Router y herramientas de animación y visualización como Framer Motion, GSAP y Three.js.
+- **Backend:** Node.js y Express, con Sequelize y PostgreSQL; incluye dependencias para autenticación con JWT y hash de contraseñas.
+- **Workspace declarado:** la configuración también menciona `packages/shared`, pero esa carpeta no está presente en esta copia.
+
+El cliente se comunica con el servidor mediante HTTP; el backend procesa las solicitudes y accede a PostgreSQL a través de Sequelize. La organización y las decisiones del proyecto se desarrollan en [arquitectura](docs/arquitectura/arquitectura.md). La UI está orientada a explorar información y actividades de la Bienal; el estado del despliegue y de los servicios externos puede variar.
 
 ## Ejecutar en desarrollo
 
