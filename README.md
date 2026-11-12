@@ -3,7 +3,22 @@
 <p align="center"><strong>Proyecto académico para explorar eventos y esculturas.</strong><br/>React · TypeScript · Express</p>
 
 
-Bienvenido al proyecto Bienal del Chaco 2024. Aquí encontrarás toda la información necesaria para trabajar con este proyecto.
+Proyecto académico full stack inspirado en la Bienal del Chaco 2024. El repositorio reúne la aplicación web, el backend y código compartido para explorar el catálogo y las funciones del proyecto.
+
+**Estado:** proyecto académico histórico. La disponibilidad del despliegue y de sus servicios puede variar.
+
+## Ejecutar en desarrollo
+
+El repositorio usa workspaces de Yarn. Para preparar una copia local:
+
+```bash
+git clone https://github.com/SaintWyss/Bienal-del-Chaco-2024.git
+cd Bienal-del-Chaco-2024
+yarn install
+yarn dev
+```
+
+Antes de iniciarlo, revisá las [precondiciones](docs/Guias/precondicion.md), la configuración del backend y la [guía de instalación](docs/Guias/installation.md). La guía conserva la URL del repositorio académico original; para esta copia usá la URL indicada arriba. La ejecución local no fue verificada en esta revisión.
 
 ## Deploy Front
 
@@ -37,4 +52,4 @@ El proyecto ha pasado por un proceso de refactorización para mejorar la calidad
 
 ## Licencia
 
-Este proyecto está bajo la licencia MIT.
+El README anterior indicaba MIT, pero esta copia no incluye actualmente un archivo de licencia. Consultá a los autores para aclarar los términos de reutilización.
